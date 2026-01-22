@@ -1,5 +1,5 @@
 import scapy.all as scapy
-import time
+import time as time
 
 green='\033[92m'
 red='\033[91m'
@@ -37,16 +37,16 @@ try:
         p=scapy.IP(dst=ip)/scapy.ICMP()
         try:
             while count!=0:
-                start=time.perf_counter()
+                
                 ans=scapy.sr1(p,timeout=2,verbose=False)
-                end=time.perf_counter()
+        
                 send+=1
                 count-=1
                 
                 if ans:
                     if ans.haslayer(scapy.ICMP) and ans.haslayer(scapy.IP) and ans[scapy.ICMP].type==0:
                         received+=1
-                        rtt=(end-start)*1000
+                        rtt=(ans.time-p.sent_time)*1000
                         rtt_list.append(rtt)
                         ttl=ans[scapy.IP].ttl
                         os=guess_os(ttl)
@@ -77,3 +77,4 @@ try:
     ping(ip_t,chislo)   
 except KeyboardInterrupt:
     print(f"\n{y}[!]{reset} Остановлено")
+
